@@ -15,9 +15,9 @@ public class ChangeUserDataTest extends BasicTest {
     @DisplayName("PATCH Изменение почты пользователя c авторизацией")
     @Description("PATCH-запрос /api/auth/user")
     public void changeEmailUserAutorizedTest(){
-        ChangeDataForUser changeDataForUser = new ChangeDataForUser("lolollo22@yandex.ru", dataUser.getName());
+        ChangeDataForUser changeDataForUser = new ChangeDataForUser("7lolollo@yandex.ru", dataUser.getName());
         basicChangeUserData(changeDataForUser,accessToken).then().assertThat().statusCode(SC_OK)
-                .body("user.email", equalTo("lolollo22@yandex.ru"))
+                .body("user.email", equalTo("7lolollo@yandex.ru"))
                 .body("success", equalTo(true));
 
     }

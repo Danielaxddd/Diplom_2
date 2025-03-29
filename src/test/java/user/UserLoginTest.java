@@ -26,7 +26,7 @@ public class UserLoginTest extends BasicTest {
     @Description("Post-запрос /api/auth/login")
     @Test
     public void UserLogOnWrongEmail(){
-        UserCanLogOn userCanLogOn = new UserCanLogOn(dataUser.getEmail(), "123456");
+        UserCanLogOn userCanLogOn = new UserCanLogOn("1" +dataUser.getEmail(), "123456");
         basicPostApi(userCanLogOn, USER_LOGIN).then().assertThat().statusCode(SC_UNAUTHORIZED)
                 .body("success", equalTo(false))
                 .body("message", equalTo("email or password are incorrect"));
