@@ -4,6 +4,7 @@ public class ChangeDataForUser {
     private String email;
     private String name;
 
+
     public ChangeDataForUser(String email, String name){
         this.email = email;
         this.name = name;

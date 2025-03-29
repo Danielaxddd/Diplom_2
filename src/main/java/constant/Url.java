@@ -1,7 +1,7 @@
 package constant;
 
 
-public class Pens {
+public class Url {
     public static final String MAIN_URL = "https://stellarburgers.nomoreparties.site";
     public static final String CREATE_USER = "/api/auth/register";
     public static final String USER_LOGIN = "/api/auth/login";

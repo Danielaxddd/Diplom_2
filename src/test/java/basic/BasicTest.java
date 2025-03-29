@@ -1,20 +1,46 @@
 package basic;
 
+import api.ClientApi;
+import api.DataUser;
+import api.DeleteClient;
+import client.RandomClient;
+import constant.ChangeDataForUser;
+import constant.CreateUser;
 import io.qameta.allure.Step;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import org.junit.After;
 import org.junit.Before;
 
-import static constant.Pens.*;
+import static constant.Url.*;
 import static io.restassured.RestAssured.given;
 
-public class BasicUrl {
+public class BasicTest {
+    public static final DataUser dataUser = RandomClient.getUser();
+    public ClientApi api;
+    public String accessToken;
+
     @Before
     public void setUp() {
         RestAssured.baseURI = MAIN_URL;
+        api = new ClientApi();
+        api.basicCreateApi(dataUser);
+        DeleteClient deleteClient = new DeleteClient(dataUser.getEmail(), dataUser.getPassword());
+        accessToken = api.login(deleteClient).then().extract().path("accessToken").toString();
     }
+
+    @After
+    @Step("Удаление пользователя")
+    public void deleteProfileUser(){
+        DeleteClient deleteClient = new DeleteClient(dataUser.getEmail(), dataUser.getPassword());
+        Response response = api.login(deleteClient);
+        if (response.body().jsonPath().getString("accessToken") != null) {
+            api.basicDeleteApi(deleteClient);
+        }
+    }
+
     @Step("POST ручка создание и входа пользователя")
-    public static Response BasicPostApi(Object a, String api){
+    public static Response basicPostApi(Object a, String api){
         Response response =
                 given()
                         .header("Content-type", "application/json")
@@ -25,7 +51,7 @@ public class BasicUrl {
     }
 
     @Step("DELETE ручка для удаления пользователя")
-    public Response BasicDeleteApi (String token){
+    public Response basicDeleteApi (String token){
         Response response =
                 given()
                         .header("Content-type", "application/json")
@@ -36,10 +62,11 @@ public class BasicUrl {
     }
 
     @Step("PATCH ручка для изменения данных пользователя")
-    public Response BasicChangeUserData(Object a, String token){
+    public Response basicChangeUserData(ChangeDataForUser a, String token){
         Response response =
                 given()
                         .header("Authorization",token)
+                        .header("Content-type", "application/json")
                         .body(a)
                         .when()
                         .patch(CHANGE_USER_DATA);
@@ -47,7 +74,7 @@ public class BasicUrl {
     }
 
     @Step("POST Создание заказа")
-    public Response BasicCreateOrder(Object a, String token){
+    public Response basicCreateOrder(Object a, String token){
         Response response =
                 given()
                         .header("Authorization",token)
@@ -58,7 +85,7 @@ public class BasicUrl {
         return response;
     }
     @Step("GET Получение заказов конкретного пользователя")
-    public Response BasicGetOrderUser(String token){
+    public Response basicGetOrderUser(String token){
         Response response =
                 given()
                         .header("Authorization",token)
