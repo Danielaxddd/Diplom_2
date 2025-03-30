@@ -15,9 +15,9 @@ public class ChangeUserDataTest extends BasicTest {
     @DisplayName("PATCH Изменение почты пользователя c авторизацией")
     @Description("PATCH-запрос /api/auth/user")
     public void changeEmailUserAutorizedTest(){
-        ChangeDataForUser changeDataForUser = new ChangeDataForUser("7lolollo@yandex.ru", dataUser.getName());
-        basicChangeUserData(changeDataForUser,accessToken).then().assertThat().statusCode(SC_OK)
-                .body("user.email", equalTo("7lolollo@yandex.ru"))
+        ChangeDataForUser changeDataForUser = new ChangeDataForUser("new" + dataUser.getEmail(), dataUser.getName());
+        api.basicChangeUserData(changeDataForUser,accessToken).then().assertThat().statusCode(SC_OK)
+                .body("user.email", equalTo("new" + dataUser.getEmail()))
                 .body("success", equalTo(true));
 
     }
@@ -26,10 +26,10 @@ public class ChangeUserDataTest extends BasicTest {
     @DisplayName("PATCH Изменение имени пользователя c авторизацией")
     @Description("PATCH-запрос /api/auth/user")
     public void changeNameUserAutorizedTest(){
-        ChangeDataForUser changeDataForUser = new ChangeDataForUser(dataUser.getEmail(), "loldololo");
-        basicChangeUserData(changeDataForUser,accessToken).then().assertThat().statusCode(SC_OK)
+        ChangeDataForUser changeDataForUser = new ChangeDataForUser(dataUser.getEmail(), "new" + dataUser.getName());
+        api.basicChangeUserData(changeDataForUser,accessToken).then().assertThat().statusCode(SC_OK)
                 .body("success", equalTo(true))
-                .body("user.name", equalTo("loldololo"));
+                .body("user.name", equalTo("new" + dataUser.getName()));
 
     }
 
@@ -37,8 +37,8 @@ public class ChangeUserDataTest extends BasicTest {
     @DisplayName("PATCH Изменение почты пользователя без авторизации")
     @Description("Post-запрос /api/auth/user")
     public void changeEmailWithoutAutorizedTest(){
-        ChangeDataForUser changeDataForUser = new ChangeDataForUser("lolollo22@yandex.ru", dataUser.getName());
-        basicChangeUserData(changeDataForUser,"").then().assertThat().statusCode(SC_UNAUTHORIZED)
+        ChangeDataForUser changeDataForUser = new ChangeDataForUser("new" + dataUser.getEmail(), dataUser.getName());
+        api.basicChangeUserData(changeDataForUser,"").then().assertThat().statusCode(SC_UNAUTHORIZED)
                 .body("success", equalTo(false))
                 .body("message", equalTo("You should be authorised"));
     }
@@ -47,8 +47,8 @@ public class ChangeUserDataTest extends BasicTest {
     @DisplayName("PATCH Изменение имени пользователя без авторизации")
     @Description("Post-запрос /api/auth/user")
     public void changeNameWithoutAutorizedTest(){
-        ChangeDataForUser changeDataForUser = new ChangeDataForUser(dataUser.getEmail(), "loldololo");
-        basicChangeUserData(changeDataForUser,"").then().assertThat().statusCode(SC_UNAUTHORIZED)
+        ChangeDataForUser changeDataForUser = new ChangeDataForUser(dataUser.getEmail(), "new" + dataUser.getName());
+        api.basicChangeUserData(changeDataForUser,"").then().assertThat().statusCode(SC_UNAUTHORIZED)
                 .body("success", equalTo(false))
                 .body("message", equalTo("You should be authorised"));
     }

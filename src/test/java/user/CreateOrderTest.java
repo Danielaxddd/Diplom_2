@@ -2,12 +2,8 @@ package user;
 
 import basic.BasicTest;
 import constant.CreateOrder;
-import constant.CreateUser;
 import io.qameta.allure.Description;
-import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
@@ -22,7 +18,7 @@ public class CreateOrderTest extends BasicTest {
     @Description("Post-запрос /api/orders")
     public void CreateOrderAutorizedUserTest(){
         CreateOrder createOrder = new CreateOrder(List.of("61c0c5a71d1f82001bdaaa76","61c0c5a71d1f82001bdaaa75"));
-        basicCreateOrder(createOrder, accessToken).then().assertThat().statusCode(SC_OK)
+        api.basicCreateOrder(createOrder, accessToken).then().assertThat().statusCode(SC_OK)
                 .body("success", equalTo(true));
     }
 
@@ -31,7 +27,7 @@ public class CreateOrderTest extends BasicTest {
     @Description("Post-запрос /api/orders")
     public void CreateOrderWithoutAutorizedUserTest(){
         CreateOrder createOrder = new CreateOrder(List.of("61c0c5a71d1f82001bdaaa76","61c0c5a71d1f82001bdaaa75"));
-        basicCreateOrder(createOrder, "").then().assertThat().statusCode(SC_OK)
+        api.basicCreateOrder(createOrder, "").then().assertThat().statusCode(SC_OK)
                 .body("success", equalTo(true));
     }
     @Test
@@ -39,14 +35,14 @@ public class CreateOrderTest extends BasicTest {
     @Description("Post-запрос /api/orders")
     public void CreateOrderWrongHash(){
         CreateOrder createOrder = new CreateOrder(List.of("61c0c5a1f82001b","61c0c51f82001b"));
-        basicCreateOrder(createOrder, accessToken).then().assertThat().statusCode(SC_INTERNAL_SERVER_ERROR)
+        api.basicCreateOrder(createOrder, accessToken).then().assertThat().statusCode(SC_INTERNAL_SERVER_ERROR)
                 .statusCode(SC_INTERNAL_SERVER_ERROR);
     }
     @Test
     @DisplayName("POST Создание заказа без ингредиентов")
     @Description("Post-запрос /api/orders")
     public void CreateOrderWithoutIngred(){
-        basicCreateOrder("", accessToken).then().assertThat().statusCode(SC_BAD_REQUEST)
+        api.basicCreateOrder("", accessToken).then().assertThat().statusCode(SC_BAD_REQUEST)
                 .body("success", equalTo(false))
                 .body("message", equalTo("Ingredient ids must be provided"));
     }

@@ -17,7 +17,7 @@ public class UserLoginTest extends BasicTest {
     @Test
     public void UserCanLogOnTest(){
         UserCanLogOn userCanLogOn = new UserCanLogOn(dataUser.getEmail(), dataUser.getPassword());
-        basicPostApi(userCanLogOn, USER_LOGIN).then().assertThat().statusCode(SC_OK)
+        api.basicPostApi(userCanLogOn, USER_LOGIN).then().assertThat().statusCode(SC_OK)
                 .body("success", equalTo(true))
                 .body("accessToken", notNullValue());
     }
@@ -26,8 +26,8 @@ public class UserLoginTest extends BasicTest {
     @Description("Post-запрос /api/auth/login")
     @Test
     public void UserLogOnWrongEmail(){
-        UserCanLogOn userCanLogOn = new UserCanLogOn("1" +dataUser.getEmail(), "123456");
-        basicPostApi(userCanLogOn, USER_LOGIN).then().assertThat().statusCode(SC_UNAUTHORIZED)
+        UserCanLogOn userCanLogOn = new UserCanLogOn("1" + dataUser.getEmail(), dataUser.getPassword());
+        api.basicPostApi(userCanLogOn, USER_LOGIN).then().assertThat().statusCode(SC_UNAUTHORIZED)
                 .body("success", equalTo(false))
                 .body("message", equalTo("email or password are incorrect"));
     }
@@ -36,8 +36,8 @@ public class UserLoginTest extends BasicTest {
     @Description("Post-запрос /api/auth/login")
     @Test
     public void UserLogOnWrongPassword(){
-        UserCanLogOn userCanLogOn = new UserCanLogOn("lalala@yandex.ru", dataUser.getPassword());
-        basicPostApi(userCanLogOn, USER_LOGIN).then().assertThat().statusCode(SC_UNAUTHORIZED)
+        UserCanLogOn userCanLogOn = new UserCanLogOn(dataUser.getEmail(), "1" + dataUser.getPassword());
+        api.basicPostApi(userCanLogOn, USER_LOGIN).then().assertThat().statusCode(SC_UNAUTHORIZED)
                 .body("success", equalTo(false))
                 .body("message", equalTo("email or password are incorrect"));
     }
